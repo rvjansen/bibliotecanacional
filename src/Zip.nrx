@@ -105,20 +105,20 @@ class Zip
     end
     else
       do
-	i            = this.fileNames.iterator()
-	out          = ZipOutputStream(FileOutputStream(this.name))
+ 	i	 = this.fileNames.iterator()
+	out	 = ZipOutputStream(FileOutputStream(this.name))
 	loop while i.hasNext()
 	  infile = String(Rexx i.next())
-	  in     = FileInputStream(infile)
+	  in	 = FileInputStream(infile)
 	  out.putNextEntry(ZipEntry(infile))
-	  buf = byte[1024]
-	  len = in.read(buf)
+	  buf	 = byte[1024]
+	  len	 = in.read(buf)
 	  loop while (len > 0)
 	    out.write(buf,0,len)
-	    len = in.read(buf)
+	    len	 = in.read(buf)
 	  end
 	end
-      catch ioex=IOException
+      catch ioex = IOException
 	say ioex.getMessage()
       end
     out.close()
