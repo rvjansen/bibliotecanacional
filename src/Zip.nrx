@@ -7,17 +7,19 @@ import com.ibm.jzos.
  * the copying of the file content to a zipOutputstream. DeleteOriginals
  * deletes the files on normal exit of the JVM.
  * @version $Id: Zip.nrx,v 1.5 2004/02/02 16:21:29 JA2511 Exp $
- * @version $Id: Zip.nrx,v 1.6 2014/12/15 16:21:29 M07G214 JZOS Exp $ § 
+ * @version $Id: Zip.nrx,v 1.6 2014/12/15 16:21:29 M07G214 JZOS Exp $ §
+ * @version $Id: Zip.nrx,v 1.7 2019/04/02 18:26:30 RVJ ReadZipEntries Exp $ §  
  */
 class Zip
 
   properties indirect
-  fileNames = ArrayList
-  extra     = ArrayList
-  name      = Rexx
+  fileNames    = ArrayList
+  extra	       = ArrayList
+  zipEntries   = ArrayList
+  name	       = Rexx
 
   properties private
-  os        = String
+  os	       = String
   createcalled = Boolean
 
   /** default constructor */
@@ -124,5 +126,28 @@ class Zip
     out.close()
     return
     
+  method readZip(zipFile)
+    do
+      this.zipEntries = ArrayList()
+      zipFileStream   = FileInputStream(zipFile)
+      this.readZipFileStream(zipFileStream)
+    catch IOException
+      say "error reading zip file %s!"
+    end
     
+  method readZipFileStream(zipFileStream=InputStream)
+    zipInputStream_ = ZipInputStream(zipFileStream)
+    zipEntry_       = ZipEntry
+    
+    loop forever
+      zipEntry_ = zipInputStream_.getNextEntry()
+      if zipEntry_ = null then leave
+      this.zipEntries.add(zipEntry_.getName())
+      if \zipEntry_.isDirectory() then if zipEntry_.getName().endsWith(".zip") then do
+        this.readZipFileStream(zipInputStream_) -- recursion
+      end
+    catch e=IOException
+      say "error reading zip file stream" e.toString()
+    end -- loop forever
+
     
