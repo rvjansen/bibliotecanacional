@@ -1,4 +1,3 @@
---package com.rvjansen
 import com.ibm.jzos.
 
 /**
@@ -81,6 +80,7 @@ class Zip
     /**
      * method create() does the actual work of creating the zipfile with
      * an entry for every file and copying to the zipoutputstream
+     * 2014: 
      * a version for z/OS is added to be able to directly use DDnames 
      */
   method create()
@@ -126,23 +126,24 @@ class Zip
     out.close()
     return
     
-  method readZip(zipFile)
+  method readZip(zipFile) returns ArrayList --of Rexx
     do
       this.zipEntries = ArrayList()
       zipFileStream   = FileInputStream(zipFile)
       this.readZipFileStream(zipFileStream)
+      return this.zipEntries
     catch IOException
-      say "error reading zip file %s!"
+      say "error reading zip file"
+      return null
     end
     
   method readZipFileStream(zipFileStream=InputStream)
     zipInputStream_ = ZipInputStream(zipFileStream)
     zipEntry_       = ZipEntry
-    
     loop forever
       zipEntry_ = zipInputStream_.getNextEntry()
       if zipEntry_ = null then leave
-      this.zipEntries.add(zipEntry_.getName())
+      this.zipEntries.add(Rexx zipEntry_.getName())
       if \zipEntry_.isDirectory() then if zipEntry_.getName().endsWith(".zip") then do
         this.readZipFileStream(zipInputStream_) -- recursion
       end
@@ -150,4 +151,55 @@ class Zip
       say "error reading zip file stream" e.toString()
     end -- loop forever
 
-    
+
+  method extractAllFilesFromZip(archive_)
+    buffer = byte[1024]
+    zis = ZipInputStream(FileInputStream(archive_))
+    zipEntry_ = zis.getNextEntry()
+    loop while zipEntry_ <> null
+      newFile = File(zipEntry_.getName)
+      fos = FileOutputStream(newFile)
+      len = zis.read(buffer)
+      loop while len>0
+        fos.write(buffer, 0, len)
+	len = zis.read(buffer)
+      end
+      fos.close()
+      zipEntry_ = zis.getNextEntry()
+    end
+    zis.closeEntry()
+    zis.close()
+
+  method extractFilesFromZip(archive_,a=ArrayList)
+    buffer = byte[1024]
+    zis = ZipInputStream(FileInputStream(archive_))
+    zipEntry_ = zis.getNextEntry()
+    loop while zipEntry_ <> null
+      if a.contains(Rexx zipEntry_.getName()) then
+	do
+	  nop
+	end
+      else
+	do
+	  zipEntry_ = zis.getNextEntry()
+	  iterate
+	end
+      newFile = File(zipEntry_.getName)
+      fos = FileOutputStream(newFile)
+      len = zis.read(buffer)
+      loop while len>0
+        fos.write(buffer, 0, len)
+	len = zis.read(buffer)
+      end
+      fos.close()
+      zipEntry_ = zis.getNextEntry()
+    end
+    zis.closeEntry()
+    zis.close()
+
+
+  method main(args=String[]) static
+    z = Zip()
+    b = ArrayList()
+    b.add(Rexx 'b.test')
+    z.extractFilesFromZip("test.zip",b)

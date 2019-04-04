@@ -1,0 +1,33 @@
+/**
+ * Class EssoNews implements... 
+ * <BR>
+ * Created on: Wed, 03, Apr 2019 15:56:44 -0400
+ */
+class EssoNews
+
+  /**
+   * Default constructor
+   */
+  method EssoNews()
+    return
+
+  method main(args=String[]) static
+    issueMap = TreeMap()
+    a	     = Zip().readZip('BNA-DIG-ESSONEWS-1984_images.zip')
+    i	     = a.iterator()
+    loop while i.hasNext()
+      filename_ = i.next()
+      parse filename_ 'ESSONEWS-' issue '-' .
+      if issueMap.get(issue) == null then
+	do
+	  b = ArrayList()
+	  b.add(filename_)
+	end
+      else
+	do
+	  b = ArrayList issueMap.get(issue)
+	  b.add(fileName_)
+	end
+      issueMap.put(issue,b)
+    end
+    say issueMap
