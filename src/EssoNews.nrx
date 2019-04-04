@@ -5,6 +5,8 @@
  */
 class EssoNews
 
+  properties static
+  zipFile = 'BNA-DIG-ESSONEWS-1984_images.zip'
   /**
    * Default constructor
    */
@@ -13,7 +15,7 @@ class EssoNews
 
   method main(args=String[]) static
     issueMap = TreeMap()
-    a	     = Zip().readZip('BNA-DIG-ESSONEWS-1984_images.zip')
+    a	     = Zip().readZip(zipFile)
     i	     = a.iterator()
     loop while i.hasNext()
       filename_ = i.next()
@@ -30,4 +32,15 @@ class EssoNews
 	end
       issueMap.put(issue,b)
     end
-    say issueMap
+    j = issueMap.keySet().iterator()
+    loop while j.hasNext()
+      key= j.next()
+      toUnzip = ArrayList issueMap.get(key)
+      zi = Zip()
+      zi.extractFilesFromZip(zipFile,toUnzip)
+      zo=Zip(zipFile.left(21)||'-'||key'_images.zip')
+      zo.setFileNames(toUnzip)
+      zo.create()
+      zo.deleteOriginals()
+    end
+    
