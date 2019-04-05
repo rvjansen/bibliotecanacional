@@ -1,0 +1,40 @@
+/**
+ * Class Despertador implements... 
+ * <BR>
+ * Created on: Thu, 04, Apr 2019 22:16:34 -0400
+ */
+class Despertador
+  properties static
+  path_
+  /**
+   * Default constructor
+   * assume we have OCR'ed all image files in the directory with
+   *   for i in *; do tesseract "$i" "$i";done
+   * in the tesseract docker image, we now look for the signature line
+   * that opens every issue  
+   */
+  method Despertador()
+    
+  method main(args=String[]) static
+    dirname = "/Users/rvjansen/Desktop/BNA-DIG-DESPERTADOR-1934-1935_jp2/" 
+    f = File(dirname)
+    a = ArrayList(Arrays.asList(f.listFiles()))
+    Collections.sort(a)
+    i = a.iterator()
+    loop while i.hasNext()
+      filename_ = Rexx (File i.next()).getName()
+      if filename_.right(3) <> 'txt' then iterate
+      path_=dirname||filename_
+      RexxIO().File(dirname||filename_).forEachline(Despertador().checkFile())
+    end
+    
+class Despertador.checkFile dependent implements LineHandler
+  method handle(in)
+    if in.pos('ARUBA') > 0 then if in.pos('1934') > 0 | in.pos('1935') > 0 then
+      if in.pos('DE') > 0 then do
+      say parent.path_
+      say in
+    end
+    
+
+    
