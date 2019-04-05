@@ -1,11 +1,13 @@
 /**
- * Class Despertador implements... 
+ * Class Despertador implements splitting up an image archive
+ * consisting of issues of this publication, on issue date  
  * <BR>
  * Created on: Thu, 04, Apr 2019 22:16:34 -0400
  */
 class Despertador
   properties static
   path_
+  file_
   /**
    * Default constructor
    * assume we have OCR'ed all image files in the directory with
@@ -16,23 +18,27 @@ class Despertador
   method Despertador()
     
   method main(args=String[]) static
+    say Date() "Despertador started"
     dirname = "/Users/rvjansen/Desktop/BNA-DIG-DESPERTADOR-1934-1935_jp2/" 
     f = File(dirname)
     a = ArrayList(Arrays.asList(f.listFiles()))
+    -- make sure we get these in sequence
     Collections.sort(a)
     i = a.iterator()
     loop while i.hasNext()
       filename_ = Rexx (File i.next()).getName()
       if filename_.right(3) <> 'txt' then iterate
       path_=dirname||filename_
+      file_=filename_
       RexxIO().File(dirname||filename_).forEachline(Despertador().checkFile())
     end
+    say Date() "Despertador Ended"
     
 class Despertador.checkFile dependent implements LineHandler
   method handle(in)
     if in.pos('ARUBA') > 0 then if in.pos('1934') > 0 | in.pos('1935') > 0 then
       if in.pos('DE') > 0 then do
-      say parent.path_
+	say parent.file_
       say in
     end
     

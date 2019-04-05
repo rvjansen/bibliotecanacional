@@ -14,7 +14,9 @@ class EssoNews
     return
 
   method main(args=String[]) static
+    say Date() "EssoNews Started"
     issueMap = TreeMap()
+    say Date() "EssoNews Reading" zipFile
     a	     = Zip().readZip(zipFile)
     i	     = a.iterator()
     loop while i.hasNext()
@@ -35,12 +37,15 @@ class EssoNews
     j = issueMap.keySet().iterator()
     loop while j.hasNext()
       key= j.next()
+      say Date() "EssoNews for key" key
       toUnzip = ArrayList issueMap.get(key)
       zi = Zip()
+      say Date() "EssoNews Unzipping" toUnzip
       zi.extractFilesFromZip(zipFile,toUnzip)
+      say Date() 'EssoNews Zipping into' zipFile.left(21)||'-'||key'_images.zip'
       zo=Zip(zipFile.left(21)||'-'||key'_images.zip')
       zo.setFileNames(toUnzip)
       zo.create()
       zo.deleteOriginals()
     end
-    
+    say Date() "EssoNews Ended"
