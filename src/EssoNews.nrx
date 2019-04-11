@@ -12,7 +12,8 @@ class EssoNews
    */
   method EssoNews()
     return
-
+    
+    @SuppressWarnings("unchecked")
   method main(args=String[]) static
     say Date() "EssoNews Started"
     issueMap = TreeMap()
