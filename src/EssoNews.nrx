@@ -6,16 +6,16 @@
 class EssoNews
 
   properties static
-  zipFile = 'BNA-DIG-ESSONEWS-1984_images.zip'
+  zipFile = ''
   /**
    * Default constructor
    */
   method EssoNews()
     return
     
-    @SuppressWarnings("unchecked")
   method main(args=String[]) static
     say Date() "EssoNews Started"
+    zipFile = args[0]
     issueMap = TreeMap()
     say Date() "EssoNews Reading" zipFile
     a	     = Zip().readZip(zipFile)

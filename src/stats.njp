@@ -1,0 +1,1 @@
+pipe (test1) command ia search BNA-DIG | rexx count lines | console
