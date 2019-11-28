@@ -22,7 +22,8 @@ class EssoNews
     i	     = a.iterator()
     loop while i.hasNext()
       filename_ = i.next()
-      parse filename_ 'ESSONEWS-' issue '-' .
+      parse filename_ 'BNA-DIG-ESSONEWS-'year'-'month'-'day'_' .
+      issue='BNA-DIG-ESSONEWS-'year'-'month'-'day
       if issueMap.get(issue) == null then
 	do
 	  b = ArrayList()
@@ -34,17 +35,18 @@ class EssoNews
 	  b.add(fileName_)
 	end
       issueMap.put(issue,b)
-    end
+    end -- loop while i
+    say issueMap
     j = issueMap.keySet().iterator()
     loop while j.hasNext()
-      key= j.next()
+      key= Rexx j.next()
       say Date() "EssoNews for key" key
       toUnzip = ArrayList issueMap.get(key)
       zi = Zip()
       say Date() "EssoNews Unzipping" toUnzip
       zi.extractFilesFromZip(zipFile,toUnzip)
-      say Date() 'EssoNews Zipping into' zipFile.left(21)||'-'||key'_images.zip'
-      zo=Zip(zipFile.left(21)||'-'||key'_images.zip')
+      say Date() 'EssoNews Zipping into' key.left(27)'_images.zip'
+      zo=Zip(key.left(27)'_images.zip')
       zo.setFileNames(toUnzip)
       zo.create()
       zo.deleteOriginals()

@@ -1,0 +1,1 @@
+pipe "literal ls -1 | command | specs /mv/ 1 1-* 4 1-27 54 /_/ 81 40-* 82 | > rename_files.sh"

@@ -1,0 +1,8 @@
+ia upload --metadata="mediatype:texts" --metadata="collection:lagocollection" BNA-DIG-ESSONEWS-1943-01-08 BNA-DIG-ESSONEWS-1943-01-08_images.zip
+
+ia metadata BNA-DIG-ESSONEWS-1943-01-08 --modify="language:English; Papiamento"
+ia metadata BNA-DIG-ESSONEWS-1943-01-08 --modify="creator:Lago Oil and Transport Co. Ltd."
+
+ia delete BNA-DIG-ESSONEWS-1943-01-08 --all -H x-archive-keep-old-version:0
+
+

@@ -1,1 +1,23 @@
-pipe (test1) command ia search BNA-DIG | rexx count lines | console
+pipe (test1) command ia search BNA-DIG | rexx specs 17-* 1 | console
+
+-- import org.netrexx.njpipes.pipes.
+
+-- class getmeta extends stage final
+
+-- method run() public
+
+--    say 'o-o : a 10, a 20'
+--    do
+--       addpipe (addpt1 debug 0 ) *out: | locate /0/ | *out:
+
+--       loop forever
+--          line = peekto()
+--          output('a 'line)
+--          readto()
+--       end
+
+--    catch StageError
+--       rc = rc()
+--    end
+
+-- exit(rc*(rc<>12))
