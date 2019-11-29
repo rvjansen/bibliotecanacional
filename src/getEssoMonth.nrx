@@ -1,0 +1,36 @@
+
+import org.netrexx.njpipes.pipes.
+
+class getEssoMonth extends stage
+
+  method getEssoMonth()
+    
+  method run() 
+    loop forever    
+      args = Rexx peekto()
+      parse args 'BNA-DIG-' subject '-'year'-'month'-'day'_' .
+      subject=subject
+      select
+	when month = '01' then month = 'January'
+	when month = '02' then month = 'February'
+	when month = '03' then month = 'March'
+	when month = '04' then month = 'April'
+	when month = '05' then month = 'May'
+	when month = '06' then month = 'June'
+	when month = '07' then month = 'July'
+	when month = '08' then month = 'August'
+	when month = '09' then month = 'September'
+	when month = '10' then month = 'October'
+	when month = '11' then month = 'November'
+	when month = '12' then month = 'December'
+	otherwise
+      end
+      mod_date='Aruba Esso News ('month day', 'year')'
+      output('ia metadata 'args' --modify="title:'mod_date'"')
+      readto()
+    catch StageError
+    end
+    
+    rc = mrc()
+    exit(rc*(rc<>12))
+    
