@@ -1,8 +1,17 @@
-ia upload --metadata="mediatype:texts" --metadata="collection:lagocollection" BNA-DIG-ESSONEWS-1943-01-08 BNA-DIG-ESSONEWS-1943-01-08_images.zip
 
-ia metadata BNA-DIG-ESSONEWS-1943-01-08 --modify="language:English; Papiamento"
-ia metadata BNA-DIG-ESSONEWS-1943-01-08 --modify="creator:Lago Oil and Transport Co. Ltd."
+# upload a directory
+pipe "literal ls -1 | command | specs /ia upload/ 1 1-27 11 /--metadata=\"mediatype:texts\" --metadata=\"collection:lagocollection\" --metadata=\"collection:arubanewspapers\" --metadata=\"collection:bibliotecanacionalaruba\"/ 40 1-* 197 | > upload.sh"
 
-ia delete BNA-DIG-ESSONEWS-1943-01-08 --all -H x-archive-keep-old-version:0
+#add eng as a language
+pipe "literal ls -1 | command | specs /ia metadata/ 1 1-27 14 /--modify=\"language:eng\"/ 45 | >update_language"
+
+#append Papiamento as a language
+pipe "literal ls -1 | command | specs /ia metadata/ 1 1-27 14 /--append-list=\"language:Papiamento\"/ 45 | > append_language.sh"
+
+#set the creator
+pipe "literal ls -1 | command | specs /ia metadata/ 1 1-27 14 /--modify=\"creator:Lago Oil and Transport Co. Ltd.\"/ 45 | >update_creator"
+
+#delete if we need to start over
+pipe "literal ls -1 | command | specs /ia delete/ 1 1-27 12 /--all -H x-archive-keep-old-version:0/ 40 | >delete.sh"
 
 
