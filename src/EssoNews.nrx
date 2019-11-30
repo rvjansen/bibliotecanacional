@@ -22,7 +22,7 @@ class EssoNews
     i	     = a.iterator()
     loop while i.hasNext()
       filename_ = i.next()
-      parse filename_ 'BNA-DIG-ESSONEWS-'year'-'month'-'day'_' .
+      parse filename_ 'BNA-DIG-ESSONEWS-'year'-'month'-'day'-' .
       issue='BNA-DIG-ESSONEWS-'year'-'month'-'day
       if issueMap.get(issue) == null then
 	do
