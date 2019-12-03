@@ -1,0 +1,26 @@
+
+import org.netrexx.njpipes.pipes.
+trace results
+class swapdate extends stage
+number2dateMap = TreeMap()
+  
+  method swapdate()
+    RexxIO().File('dates.txt').forEachLine(swapdate().read())    
+  method run()
+    do
+      args = Rexx peekto()
+      ret = rexx this.number2dateMap.get(args)
+      output('mv BNA-DIG-ESSONEWS-'args'-'args' )
+      readto()
+    catch StageError
+    end
+    
+    rc = mrc()
+    exit(rc*(rc<>12))
+
+  class swapdate.read dependent implements LineHandler
+  method handle(in)
+    parse in num date
+    parent.number2dateMap.put(num, date)
+    
+    

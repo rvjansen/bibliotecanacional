@@ -1,0 +1,34 @@
+
+import org.netrexx.njpipes.pipes.
+
+class monthtonumber extends stage
+
+  method monthtonumber()
+    
+  method run() 
+    loop forever    
+      args = Rexx peekto()
+      parse args 'IslaOnline%20'month'%20'day'%20'year'.pdf'
+      select
+	when month = 'January' then month = '01'
+	when month = 'February' then month = '02'
+	when month = 'March' then month = '03'
+	when month = 'April' then month = '04'
+	when month = 'May' then month = '05'
+	when month = 'June' then month = '06'
+	when month = 'July' then month = '07'
+	when month = 'August' then month = '08'
+	when month = 'September' then month = '09'
+	when month = 'October' then month = '10'
+	when month = 'November' then month = '11'
+	when month = 'December' then month = '12'
+	otherwise
+      end
+      output('mv' args 'BNA-ISLAONLINE-'year'-'month'-'day'.pdf')
+      readto()
+    catch StageError
+    end
+    
+    rc = mrc()
+    exit(rc*(rc<>12))
+    
