@@ -1,0 +1,42 @@
+--package .Users.rvjansen.bibliotecanacional.src
+
+/**
+ * Class rename implements... 
+ * <BR>
+ * Created on: Tue, 07, Jan 2020 10:37:26 +0100
+ */
+class rename
+  properties private
+  number2dateMap = TreeMap()
+  
+  /**
+   * Default constructor
+   */
+  method rename()
+    inFile = FileReader('dates.txt')  -- input file
+    source = BufferedReader(inFile) -- buffered
+    line = ''
+    loop while line <> null
+      line = source.readLine() -- read the file
+      if line = null then leave
+      parse line num date
+      number2dateMap.put(num, date)
+    end
+    return
+
+  method main(args=String[]) static
+    n=rename()
+    inFile = FileReader('files.txt')  -- input file
+    source = BufferedReader(inFile) -- buffered
+    line = 'empty'
+    loop while line <> null
+      line = source.readLine() -- read the file
+      if line = null then leave
+      if line = '' then iterate
+      say 'mv' line n.subs(line) 
+    end
+
+  method subs(l)
+    parse l one '-' two '-' three '-' key '-' seq '.tif'
+    return one'-'two'-'three'-'number2datemap.get(key)'-'seq'.tif'
+    
