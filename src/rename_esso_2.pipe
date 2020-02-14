@@ -1,0 +1,1 @@
+pipe "command ls -1 | locate /.tif/ | specs 18-22 1 1-* nextword | l: lookup 1.5 1.5 | join 1 x20 | cons ? < dates.txt | l: "
