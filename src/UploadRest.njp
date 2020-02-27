@@ -1,0 +1,32 @@
+import org.netrexx.njpipes.pipes.
+import org.netrexx.njpipes.stages.
+import org.netrexx.address.
+
+class UploadRest
+
+method UploadRest()
+  ObjIDV = Vector()
+
+  pipe (ObjIDPipe)
+  command ls -1 | locate /.pdf/ | specs 1-28 1 | vector {ObjIDV}
+
+  i = ObjIDV.iterator()
+  loop while i.hasNext()
+    metadata = Vector()
+    obj = Rexx i.next()
+    objCMD = 'ia metadata' obj
+    pipe (ObjMetadataPipe)
+    command {objCMD} | vector {metadata}
+    meta = Rexx metadata.get(0)
+    if meta = '{}' then upload(obj)
+  end -- loop while i
+  
+  method upload(id) signals ThreadQ
+    fl = id'.pdf'
+    upload_cmd = 'ia upload' id '--header="x-archive-check-file:0" --metadata="mediatype:texts" --metadata="collection:arubanewspapers" --metadata="collection:bibliotecanacionalaruba" --metadata="language:Papiamento"' fl 
+    pipe (makeUploadFile)
+    literal {upload_cmd} | >> uploadNoThere.sh
+  
+method main(a=String[]) static
+  UploadRest()
+exit
