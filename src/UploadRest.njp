@@ -13,12 +13,21 @@ method UploadRest()
   i = ObjIDV.iterator()
   loop while i.hasNext()
     metadata = Vector()
+    files    = Vector()
     obj = Rexx i.next()
     objCMD = 'ia metadata' obj
+    objListCMD = 'ia list' obj
     pipe (ObjMetadataPipe)
     command {objCMD} | vector {metadata}
     meta = Rexx metadata.get(0)
-    if meta = '{}' then upload(obj)
+    if meta = '{}' then do
+      upload(obj) -- there is no metadata or no object, upload the file
+      iterate
+    end
+    pipe (OBJListFiles)
+    command {objListCMD} | vector {files}
+    filesp = Rexx files.get(0)
+    if filesp <> obj'.pdf' then upload(obj) -- object exists, but no file, so upload the file
   end -- loop while i
   
   method upload(id) signals ThreadQ
