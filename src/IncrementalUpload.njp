@@ -2,9 +2,9 @@ import org.netrexx.njpipes.pipes.
 import org.netrexx.njpipes.stages.
 import org.netrexx.address.
 
-class UploadRest
+class IncrementalUpload
 
-method UploadRest()
+method IncrementalUpload()
   ObjIDV = Vector()
 
   pipe (ObjIDPipe)
@@ -15,27 +15,33 @@ method UploadRest()
     metadata = Vector()
     files    = Vector()
     obj = Rexx i.next()
+    say Date() obj
     objCMD = 'ia metadata' obj
     objListCMD = 'ia list' obj
     pipe (ObjMetadataPipe)
     command {objCMD} | vector {metadata}
     meta = Rexx metadata.get(0)
     if meta = '{}' then do
-      upload(obj) -- there is no metadata or no object, upload the file
+      say Date() 'no metadata or no object, upload the file'
+      upload(obj) 
       iterate
     end
     pipe (OBJListFiles)
     command {objListCMD} | vector {files}
     filesp = Rexx files.get(0)
-    if filesp <> obj'.pdf' then upload(obj) -- object exists, but no file, so upload the file
+    if filesp <> obj'.pdf' then do
+      say Date() 'object exists, but no file, so upload the file'
+      upload(obj) 
+    end
   end -- loop while i
   
   method upload(id) signals ThreadQ
     fl = id'.pdf'
     upload_cmd = 'ia upload' id '--header="x-archive-check-file:0" --metadata="mediatype:texts" --metadata="collection:arubanewspapers" --metadata="collection:bibliotecanacionalaruba" --metadata="language:Papiamento"' fl 
     pipe (makeUploadFile)
-    literal {upload_cmd} | >> uploadNoThere.sh
+    literal {upload_cmd} | >> upload.sh
   
-method main(a=String[]) static
-  UploadRest()
+  method main(a=String[]) static
+    say Date() 'IncrementalUpload v1.0'
+  IncrementalUpload()
 exit
