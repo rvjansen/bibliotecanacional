@@ -36,7 +36,7 @@ pipe "literal ls -1 | command | locate /.pdf/ | specs /ia metadata/ 1 1-28 14 /-
 #description
 pipe "literal ls -1 | command | locate /.pdf/ | specs /ia metadata/ 1 1-28 14 /--modify=\"description:&lt;div&gt;&lt;a href=&quot;http:\/\/bna.aw\/digital\/?col=arubanewspapers&quot; rel=&quot;nofollow&quot;&gt;Coleccion Revista/Corant&lt;/a&gt;, Biblioteca Nacional Aruba&lt;\/div&gt;&lt;div&gt;&lt;br \/&gt;&lt;\/div&gt;&lt;div&gt;Awe Mainta&lt;\/div&gt;&lt;div&gt;&quot;E Corant di Toko&quot;&lt;\/div&gt;&lt;div&gt;Publica pa Victor &quot;Toko&quot; Winklaar, Oranjestad Aruba&lt;\/div&gt;&lt;div&gt;&lt;br \/&gt;&lt;\/div&gt;&lt;div&gt;&lt;br \/&gt;&lt;\/div&gt;Republished online by &lt;a href=&quot;http:\/\/www.archive.org\/details\/bibliotecanacionalaruba&quot; rel=&quot;nofollow&quot;&gt;Biblioteca Nacional Aruba&lt;\/a&gt; as part of the National Digital Collection with the publisher&quot;s permission. All rights remain reserved by the publisher.\"/ nextword | >> description.sh "
 
-#title
+#Title
 java org.netrexx.njpipes.pipes.runner "literal ls -1 | command | locate /.pdf/ | specs 1-28 1 | getAweMonth | >> meta.sh"
 
 

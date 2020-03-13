@@ -1,0 +1,54 @@
+--package .Users.rvjansen.bibliotecanacional.src
+
+/**
+ * Class Metadata2CSV implements... 
+ * <BR>
+ * Created on: Fri, 13, Mar 2020 21:01:06 +0100
+ */
+class Metadata2CSV
+
+  /**
+   * Default constructor
+   */
+  method Metadata2CSV()
+    RexxIO().File('../data.json').forEachline(this.docid())
+    return
+
+  method main(args=String[]) static
+    say 'identifier|oclc-id|publisher|year|language|publicdate|creator|title|collection|subject'
+    Metadata2CSV()
+
+  class Metadata2CSV.docid dependent implements LineHandler
+  method handle(in)
+
+    -- identifier
+    parse in '"identifier": "' identifier '"' .
+
+    -- oclc-id
+    parse in '"oclc-id": "' oclcid '"' .
+
+    -- publisher
+    parse in '"publisher": "' publisher '"' .
+
+    -- year
+    parse in '"year": "' year '"' .
+
+    -- language
+    parse in '"language": "' language '"' .
+
+    -- public date
+    parse in '"publicdate": "' publicdate '"' .
+
+    -- creator
+    parse in '"creator": "' creator '"' .
+
+    -- title
+    parse in '"title": "' title '"' .
+    
+    -- collection
+    parse in '"collection": [' collection ']' .
+    
+    -- subject
+    parse in '"subject": [' subject ']' .
+
+    say '"'identifier'"|"'oclcid'"|"'publisher'"|"'year'"|"'language'"|"'publicdate'"|"'creator'"|"'title'"|"'collection'"|"'subject

@@ -3,45 +3,52 @@ import org.netrexx.njpipes.stages.
 import org.netrexx.address.
 
 class IncrementalUpload
-
-method IncrementalUpload()
-  ObjIDV = Vector()
-
-  pipe (ObjIDPipe)
-  command ls -1 | locate /.pdf/ | specs 1-28 1 | vector {ObjIDV}
-
-  i = ObjIDV.iterator()
-  loop while i.hasNext()
-    metadata = Vector()
-    files    = Vector()
-    obj = Rexx i.next()
-    say Date() obj
-    objCMD = 'ia metadata' obj
-    objListCMD = 'ia list' obj
-    pipe (ObjMetadataPipe)
-    command {objCMD} | vector {metadata}
-    meta = Rexx metadata.get(0)
-    if meta = '{}' then do
-      say Date() 'no metadata or no object, upload the file'
-      upload(obj) 
-      iterate
-    end
-    pipe (OBJListFiles)
-    command {objListCMD} | vector {files}
-    filesp = Rexx files.get(0)
-    if filesp <> obj'.pdf' then do
-      say Date() 'object exists, but no file, so upload the file'
-      upload(obj) 
-    end
-  end -- loop while i
   
+  method IncrementalUpload(a)
+    ObjIDV = Vector()
+
+    pipe (ObjIDPipe)
+    command ls -1 | locate /.pdf/ | specs 1-31 1 | vector {ObjIDV}
+    
+    i = ObjIDV.iterator()
+    loop while i.hasNext()
+      metadata = Vector()
+      files    = Vector()
+      obj = Rexx i.next()
+      say Date() obj
+      objCMD = 'ia metadata' obj
+      objListCMD = 'ia list' obj
+      if a = 'first' then do
+	upload(obj)
+	iterate
+      end
+      
+      pipe (ObjMetadataPipe)
+      command {objCMD} | vector {metadata}
+      meta = Rexx metadata.get(0)
+      if meta = '{}' then do
+    	say Date() 'no metadata or no object, upload the file'
+    	upload(obj) 
+    	iterate
+      end
+      pipe (OBJListFiles)
+      command {objListCMD} | vector {files}
+      filesp = Rexx files.get(0)
+      if filesp <> obj'.pdf' then do
+    	say Date() 'object exists, but no file, so upload the file'
+    	upload(obj) 
+      end
+    end -- loop while i
+    
   method upload(id) signals ThreadQ
     fl = id'.pdf'
-    upload_cmd = 'ia upload' id '--header="x-archive-check-file:0" --metadata="mediatype:texts" --metadata="collection:arubanewspapers" --metadata="collection:bibliotecanacionalaruba" --metadata="language:Papiamento"' fl 
+    upload_cmd = 'ia upload' id '--header="x-archive-check-file:0" --metadata="mediatype:texts" --metadata="collection:arubanewspapers" --metadata="collection:bibliotecanacionalaruba" --metadata="language:eng"' fl 
     pipe (makeUploadFile)
     literal {upload_cmd} | >> upload.sh
-  
+    
   method main(a=String[]) static
+    parse a parm .
     say Date() 'IncrementalUpload v1.0'
-  IncrementalUpload()
-exit
+    IncrementalUpload(parm)
+    exit
+    
