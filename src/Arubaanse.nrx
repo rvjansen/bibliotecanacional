@@ -1,0 +1,50 @@
+-- sun 6 aug 2020
+class Arubaanse
+
+  properties static
+  zipFile = ''
+  /**
+   * Default constructor
+   */
+  method Arubaanse()
+    return
+    
+  method main(args=String[]) static
+    say Date() "Arubaanse Started"
+    zipFile = args[0]
+    issueMap = TreeMap()
+    say Date() "Arubaanse Reading" zipFile
+    a	     = Zip().readZip(zipFile)
+    i	     = a.iterator()
+    loop while i.hasNext()
+      filename_ = i.next()
+      parse filename_ 'BNA-DIG-ARUBAANSECOURANT-'year'-'month'-'day'_' .
+      issue='BNA-DIG-ARUBAANSECOURANT-'year'-'month'-'day
+      if issueMap.get(issue) == null then
+	do
+	  b = ArrayList()
+	  b.add(filename_)
+	end
+      else
+	do
+	  b = ArrayList issueMap.get(issue)
+	  b.add(fileName_)
+	end
+      issueMap.put(issue,b)
+    end -- loop while i
+    say issueMap
+    j = issueMap.keySet().iterator()
+    loop while j.hasNext()
+      key= Rexx j.next()
+      say Date() "Arubaanse for key" key
+      toUnzip = ArrayList issueMap.get(key)
+      zi = Zip()
+      say Date() "Arubaanse Unzipping" toUnzip
+      zi.extractFilesFromZip(zipFile,toUnzip)
+      say Date() 'Arubaanse Zipping into' key.left(35)'_images.zip'
+      zo=Zip(key.left(35)'_images.zip')
+      zo.setFileNames(toUnzip)
+      zo.create()
+      zo.deleteOriginals()
+    end
+    say Date() "Arubaanse Ended"
