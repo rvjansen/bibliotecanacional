@@ -8,7 +8,7 @@ class IncrementalUpload
     ObjIDV = Vector()
 
     pipe (ObjIDPipe)
-    command ls -1 | locate /.pdf/ | specs 1-31 1 | vector {ObjIDV}
+    command ls -1 | locate /.zip/ | specs 1-35 1 | vector {ObjIDV}
     
     i = ObjIDV.iterator()
     loop while i.hasNext()
@@ -34,15 +34,15 @@ class IncrementalUpload
       pipe (OBJListFiles)
       command {objListCMD} | vector {files}
       filesp = Rexx files.get(0)
-      if filesp <> obj'.pdf' then do
+      if filesp <> obj'.zip' then do
     	say Date() 'object exists, but no file, so upload the file'
     	upload(obj) 
       end
     end -- loop while i
     
   method upload(id) signals ThreadQ
-    fl = id'.pdf'
-    upload_cmd = 'ia upload' id '--header="x-archive-check-file:0" --metadata="mediatype:texts" --metadata="collection:arubanewspapers" --metadata="collection:bibliotecanacionalaruba" --metadata="language:eng"' fl 
+    fl = id'_images.zip'
+    upload_cmd = 'ia upload' id '--header="x-archive-check-file:0" --metadata="mediatype:texts" --metadata="collection:arubanewspapers" --metadata="collection:bibliotecanacionalaruba"' fl 
     pipe (makeUploadFile)
     literal {upload_cmd} | >> upload.sh
     
