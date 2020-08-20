@@ -42,7 +42,7 @@ class IncrementalUpload
     
   method upload(id) signals ThreadQ
     fl = id'_images.zip'
-    upload_cmd = 'ia upload' id '--header="x-archive-check-file:0" --metadata="mediatype:texts" --metadata="collection:arubanewspapers" --metadata="collection:bibliotecanacionalaruba"' fl 
+    upload_cmd = 'ia upload' id '--header="x-archive-check-file:0" --metadata="mediatype:texts" --metadata="collection:arubanewspapers" --metadata="collection:bibliotecanacionalaruba" --metadata="language:Dutch"' fl 
     pipe (makeUploadFile)
     literal {upload_cmd} | >> upload.sh
     
