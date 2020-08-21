@@ -1,0 +1,34 @@
+import org.netrexx.njpipes.pipes.
+import org.netrexx.njpipes.stages.
+import org.netrexx.address.
+
+class Complete
+  
+  method Complete()
+    LinesV = Vector()
+    prevdag = ''
+    volgnummer = '001'
+    
+    pipe (CompletePipe)
+    < rename.sh | vector {LinesV}
+    
+    i = LinesV.iterator()
+    loop while i.hasNext()
+      line = Rexx i.next()
+      parse line prelude 'COURANT-19'year'-'month'-'dag'-'.'.jpg'
+      if dag <> 'XX' then do
+	prevdag = dag
+	volgnummer = '001'
+      end
+      if dag = 'XX' then do
+	dag = prevdag
+	volgnummer = volgnummer+1
+	volgnummer = volgnummer.right(3,'0') 
+      end
+      say prelude'COURANT-19'year'-'month'-'dag'-'volgnummer'.jpg'
+    end
+
+    exit
+    
+  method main(args=String[]) static
+    Complete()
