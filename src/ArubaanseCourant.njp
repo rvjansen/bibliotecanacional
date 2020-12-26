@@ -1,0 +1,53 @@
+-- sun 6 aug 2020
+import org.netrexx.njpipes.pipes.
+import org.netrexx.njpipes.stages.
+
+class ArubaanseCourant
+
+  properties static
+  zipFile = ''
+  /**
+   * Default constructor
+   */
+  method ArubaanseCourant()
+    return
+    
+  method main(args=String[]) static
+    say Date() "ArubaanseCourant Started"
+    ObjIDV = Vector()
+    issueMap = TreeMap()
+    pipe (ObjIDPipe)
+    command ls -1 | locate /.jpg/ | specs 1-* 1 | vector {ObjIDV}
+
+    say Date() "ArubaanseCourant looping through .jpg files" zipFile
+    i = ObjIDV.iterator()
+    loop while i.hasNext()
+      filename_ = i.next()
+      parse filename_ 'BNA-DIG-ARUBAANSECOURANT-'year'-'month'-'day'-' .
+      issue='BNA-DIG-ARUBAANSECOURANT-'year'-'month'-'day
+      if issueMap.get(issue) == null then
+	do
+	  b = ArrayList()
+	  b.add(filename_)
+	end
+      else
+	do
+	  b = ArrayList issueMap.get(issue)
+	  b.add(fileName_)
+	end
+      issueMap.put(issue,b)
+    end -- loop while i
+    say issueMap
+    j = issueMap.keySet().iterator()
+    loop while j.hasNext()
+      key= Rexx j.next()
+      say Date() "ArubaanseCourant for key" key
+      toZip = ArrayList issueMap.get(key)
+      say Date() 'ArubaanseCourant Zipping into' key.left(35)'_images.zip'
+      zo=Zip(key.left(35)'_images.zip')
+      zo.setFileNames(toZip)
+      zo.create()
+--      zo.deleteOriginals()
+    end
+    say Date() "ArubaanseCourant Ended"
+    exit
